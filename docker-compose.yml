@@ -1,0 +1,45 @@
+services:
+  client:
+    build:
+      context: ./client
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: ./server
+    ports:
+      - "5003:5003"
+    environment:
+      - PORT=5003
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/rag_db
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    volumes:
+      - ./server/public:/app/public
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=rag_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d rag_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

@@ -1,7 +1,7 @@
 export const EMBEDDING_MODEL = "nomic-embed-text";
 export const EMBEDDING_DIMENSIONS = 768;
 
-const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || "http://localhost:11434";
+export const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || "http://localhost:11434";
 
 export async function embedChunk(content: string): Promise<number[]> {
   const res = await fetch(`${OLLAMA_BASE_URL}/api/embeddings`, {

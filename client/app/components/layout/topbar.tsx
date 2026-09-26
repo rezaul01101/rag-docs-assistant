@@ -1,10 +1,11 @@
 import { BellIcon, ChevronDownIcon, MenuIcon, SearchIcon } from "../icons";
 
 type TopbarProps = {
+  title: string;
   onMenuClick: () => void;
 };
 
-export function Topbar({ onMenuClick }: TopbarProps) {
+export function Topbar({ title, onMenuClick }: TopbarProps) {
   return (
     <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center gap-4 border-b border-gray-200 bg-white/80 px-4 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/80 sm:px-6">
       <button
@@ -17,7 +18,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
       </button>
 
       <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-        Dashboard
+        {title}
       </h1>
 
       <div className="ml-auto flex items-center gap-3">

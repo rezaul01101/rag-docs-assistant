@@ -1,3 +1,4 @@
+import { NavLink } from "react-router";
 import {
   AnalyticsIcon,
   ChatIcon,
@@ -9,13 +10,20 @@ import {
 } from "../icons";
 
 const NAV_ITEMS = [
-  { label: "Dashboard", icon: DashboardIcon, current: true },
-  { label: "Uploads", icon: UploadIcon, current: false },
-  { label: "Messages", icon: ChatIcon, current: false },
-  { label: "Team", icon: TeamIcon, current: false },
-  { label: "Analytics", icon: AnalyticsIcon, current: false },
-  { label: "Settings", icon: SettingsIcon, current: false },
+  { label: "Dashboard", icon: DashboardIcon, to: "/" },
+  { label: "Uploads", icon: UploadIcon, to: "/uploads" },
+  { label: "Messages", icon: ChatIcon, to: null },
+  { label: "Team", icon: TeamIcon, to: null },
+  { label: "Analytics", icon: AnalyticsIcon, to: null },
+  { label: "Settings", icon: SettingsIcon, to: null },
 ];
+
+const NAV_ITEM_BASE_CLASSES =
+  "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors";
+const NAV_ITEM_ACTIVE_CLASSES =
+  "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400";
+const NAV_ITEM_INACTIVE_CLASSES =
+  "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white";
 
 type SidebarProps = {
   open: boolean;
@@ -59,22 +67,34 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-          {NAV_ITEMS.map(({ label, icon: Icon, current }) => (
-            <button
-              key={label}
-              type="button"
-              onClick={onClose}
-              aria-current={current ? "page" : undefined}
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                current
-                  ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
-              }`}
-            >
-              <Icon className="size-5 shrink-0" />
-              {label}
-            </button>
-          ))}
+          {NAV_ITEMS.map(({ label, icon: Icon, to }) =>
+            to ? (
+              <NavLink
+                key={label}
+                to={to}
+                end={to === "/"}
+                onClick={onClose}
+                className={({ isActive }) =>
+                  `${NAV_ITEM_BASE_CLASSES} ${
+                    isActive ? NAV_ITEM_ACTIVE_CLASSES : NAV_ITEM_INACTIVE_CLASSES
+                  }`
+                }
+              >
+                <Icon className="size-5 shrink-0" />
+                {label}
+              </NavLink>
+            ) : (
+              <button
+                key={label}
+                type="button"
+                onClick={onClose}
+                className={`${NAV_ITEM_BASE_CLASSES} ${NAV_ITEM_INACTIVE_CLASSES}`}
+              >
+                <Icon className="size-5 shrink-0" />
+                {label}
+              </button>
+            ),
+          )}
         </nav>
 
         <div className="border-t border-gray-200 p-4 dark:border-gray-800">
